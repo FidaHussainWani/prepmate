@@ -11,6 +11,8 @@ import com.prepmate.prepmate.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import com.prepmate.prepmate.entity.Category;
 import org.springframework.stereotype.Service;
+import com.prepmate.prepmate.entity.Tag;
+import com.prepmate.prepmate.repository.TagRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +23,7 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
     private final CategoryRepository categoryRepository;
 
    public NoteResponse createNote(
@@ -52,6 +55,20 @@ public class NoteService {
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
             .build();
+
+     if (request.getTagIds() != null) {
+
+        for (Long tagId : request.getTagIds()) {
+
+            Tag tag = tagRepository
+                    .findByIdAndUser(tagId, user)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Tag not found"));
+
+            note.getTags().add(tag);
+        }
+    }
 
     Note savedNote = noteRepository.save(note);
 
@@ -112,6 +129,22 @@ public class NoteService {
     note.setTitle(request.getTitle());
     note.setContent(request.getContent());
     note.setCategory(category);
+
+    note.getTags().clear();
+
+    if (request.getTagIds() != null) {
+
+        for (Long tagId : request.getTagIds()) {
+
+            Tag tag = tagRepository
+                    .findByIdAndUser(tagId, user)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Tag not found"));
+
+            note.getTags().add(tag);
+        }
+    }
     note.setUpdatedAt(LocalDateTime.now());
 
     Note updatedNote =
@@ -214,6 +247,16 @@ public class NoteService {
         categoryName = note.getCategory().getName();
     }
 
+    List<Long> tagIds = note.getTags()
+            .stream()
+            .map(Tag::getId)
+            .toList();
+
+    List<String> tagNames = note.getTags()
+            .stream()
+            .map(Tag::getName)
+            .toList();
+
     return new NoteResponse(
             note.getId(),
             note.getTitle(),
@@ -221,6 +264,8 @@ public class NoteService {
             note.isFavorite(),
             categoryId,
             categoryName,
+            tagIds,
+            tagNames,
             note.getCreatedAt(),
             note.getUpdatedAt()
     );
