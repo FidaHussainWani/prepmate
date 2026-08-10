@@ -84,4 +84,33 @@ public class NoteController {
                 authentication.getName()
         );
     }
+    @GetMapping("/search")
+    public List<NoteResponse> searchNotes(
+        @RequestParam String keyword,
+        Authentication authentication) {
+
+    return noteService.searchNotes(
+            keyword,
+            authentication.getName()
+    );
+    }
+    @GetMapping("/favorites")
+    public List<NoteResponse> getFavoriteNotes(
+        Authentication authentication) {
+
+    return noteService.getFavoriteNotes(
+            authentication.getName()
+    );
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public List<NoteResponse> getNotesByCategory(
+        @PathVariable Long categoryId,
+        Authentication authentication) {
+
+    return noteService.getNotesByCategory(
+            categoryId,
+            authentication.getName()
+    );
+    }
 }

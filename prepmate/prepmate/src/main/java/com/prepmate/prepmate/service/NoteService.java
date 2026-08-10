@@ -134,6 +134,22 @@ public class NoteService {
         noteRepository.delete(note);
     }
 
+    public List<NoteResponse> searchNotes(
+        String keyword,
+        String email) {
+
+    User user = getUser(email);
+
+    return noteRepository
+            .findByUserAndTitleContainingIgnoreCase(
+                    user,
+                    keyword
+            )
+            .stream()
+            .map(this::convertToResponse)
+            .toList();
+    }
+
     public NoteResponse toggleFavorite(
             Long id,
             String email) {
@@ -158,6 +174,33 @@ public class NoteService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
+    }
+    public List<NoteResponse> getFavoriteNotes(
+        String email) {
+
+    User user = getUser(email);
+
+    return noteRepository
+            .findByUserAndFavorite(user, true)
+            .stream()
+            .map(this::convertToResponse)
+            .toList();
+    }
+
+    public List<NoteResponse> getNotesByCategory(
+        Long categoryId,
+        String email) {
+
+    User user = getUser(email);
+
+    return noteRepository
+            .findByUserAndCategoryId(
+                    user,
+                    categoryId
+            )
+            .stream()
+            .map(this::convertToResponse)
+            .toList();
     }
 
    private NoteResponse convertToResponse(Note note) {
