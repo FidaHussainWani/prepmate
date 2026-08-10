@@ -4,9 +4,12 @@ import com.prepmate.prepmate.dto.note.NoteRequest;
 import com.prepmate.prepmate.dto.note.NoteResponse;
 import com.prepmate.prepmate.entity.Note;
 import com.prepmate.prepmate.entity.User;
+import com.prepmate.prepmate.repository.CategoryRepository;
 import com.prepmate.prepmate.repository.NoteRepository;
 import com.prepmate.prepmate.repository.UserRepository;
+import com.prepmate.prepmate.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import com.prepmate.prepmate.entity.Category;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,25 +21,42 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
-    public NoteResponse createNote(
-            NoteRequest request,
-            String email) {
+   public NoteResponse createNote(
+        NoteRequest request,
+        String email) {
 
-        User user = getUser(email);
+    User user = getUser(email);
 
-        Note note = Note.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
-                .user(user)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+    Category category = null;
 
-        Note savedNote = noteRepository.save(note);
+    if (request.getCategoryId() != null) {
 
-        return convertToResponse(savedNote);
+        category = categoryRepository
+                .findByIdAndUser(
+                        request.getCategoryId(),
+                        user
+                )
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Category not found"));
     }
+
+    Note note = Note.builder()
+            .title(request.getTitle())
+            .content(request.getContent())
+            .favorite(false)
+            .user(user)
+            .category(category)
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .build();
+
+    Note savedNote = noteRepository.save(note);
+
+    return convertToResponse(savedNote);
+}
 
     public List<NoteResponse> getAllNotes(String email) {
 
@@ -63,25 +83,42 @@ public class NoteService {
     }
 
     public NoteResponse updateNote(
-            Long id,
-            NoteRequest request,
-            String email) {
+        Long id,
+        NoteRequest request,
+        String email) {
 
-        User user = getUser(email);
+    User user = getUser(email);
 
-        Note note = noteRepository
-                .findByIdAndUser(id, user)
+    Note note = noteRepository
+            .findByIdAndUser(id, user)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Note not found"));
+
+    Category category = null;
+
+    if (request.getCategoryId() != null) {
+
+        category = categoryRepository
+                .findByIdAndUser(
+                        request.getCategoryId(),
+                        user
+                )
                 .orElseThrow(() ->
-                        new RuntimeException("Note not found"));
-
-        note.setTitle(request.getTitle());
-        note.setContent(request.getContent());
-        note.setUpdatedAt(LocalDateTime.now());
-
-        Note updatedNote = noteRepository.save(note);
-
-        return convertToResponse(updatedNote);
+                        new RuntimeException(
+                                "Category not found"));
     }
+
+    note.setTitle(request.getTitle());
+    note.setContent(request.getContent());
+    note.setCategory(category);
+    note.setUpdatedAt(LocalDateTime.now());
+
+    Note updatedNote =
+            noteRepository.save(note);
+
+    return convertToResponse(updatedNote);
+}
 
     public void deleteNote(
             Long id,
@@ -123,15 +160,26 @@ public class NoteService {
                         new RuntimeException("User not found"));
     }
 
-    private NoteResponse convertToResponse(Note note) {
+   private NoteResponse convertToResponse(Note note) {
 
-        return new NoteResponse(
-                note.getId(),
-                note.getTitle(),
-                note.getContent(),
-                note.isFavorite(),
-                note.getCreatedAt(),
-                note.getUpdatedAt()
-        );
+    Long categoryId = null;
+    String categoryName = null;
+
+    if (note.getCategory() != null) {
+
+        categoryId = note.getCategory().getId();
+        categoryName = note.getCategory().getName();
     }
+
+    return new NoteResponse(
+            note.getId(),
+            note.getTitle(),
+            note.getContent(),
+            note.isFavorite(),
+            categoryId,
+            categoryName,
+            note.getCreatedAt(),
+            note.getUpdatedAt()
+    );
+}
 }

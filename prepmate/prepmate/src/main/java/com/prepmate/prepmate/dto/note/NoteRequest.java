@@ -13,4 +13,6 @@ public class NoteRequest {
 
     @NotBlank
     private String content;
+
+    private Long categoryId;
 }

@@ -13,6 +13,8 @@ public class NoteResponse {
     private String title;
     private String content;
     private boolean favorite;
+    private Long categoryId;
+    private String categoryName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
