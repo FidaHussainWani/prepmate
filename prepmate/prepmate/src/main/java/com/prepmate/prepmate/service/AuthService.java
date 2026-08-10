@@ -5,6 +5,7 @@ import com.prepmate.prepmate.dto.auth.LoginRequest;
 import com.prepmate.prepmate.dto.auth.RegisterRequest;
 import com.prepmate.prepmate.entity.User;
 import com.prepmate.prepmate.repository.UserRepository;
+import com.prepmate.prepmate.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public AuthResponse register(RegisterRequest request) {
 
@@ -33,11 +35,14 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
+        String token = jwtService.generateToken(savedUser.getEmail());
+
         return new AuthResponse(
                 "Registration successful",
                 savedUser.getId(),
                 savedUser.getName(),
-                savedUser.getEmail()
+                savedUser.getEmail(),
+                token
         );
     }
 
@@ -54,11 +59,14 @@ public class AuthService {
             throw new RuntimeException("Invalid email or password");
         }
 
+        String token = jwtService.generateToken(user.getEmail());
+
         return new AuthResponse(
                 "Login successful",
                 user.getId(),
                 user.getName(),
-                user.getEmail()
+                user.getEmail(),
+                token
         );
     }
 }
