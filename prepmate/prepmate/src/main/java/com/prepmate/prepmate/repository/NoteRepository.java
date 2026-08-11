@@ -27,4 +27,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
             User user,
             Long categoryId
     );
+     long countByUser(User user);
+
+    long countByUserAndFavoriteTrue(User user);
 }

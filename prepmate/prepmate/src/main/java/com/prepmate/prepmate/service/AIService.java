@@ -3,18 +3,23 @@ package com.prepmate.prepmate.service;
 import com.prepmate.prepmate.dto.ai.QuizResponse;
 import com.prepmate.prepmate.entity.Note;
 import com.prepmate.prepmate.entity.User;
+import com.prepmate.prepmate.repository.AIActivityRepository;
 import com.prepmate.prepmate.repository.NoteRepository;
 import com.prepmate.prepmate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prepmate.prepmate.dto.ai.QuizResponse;
+
+import com.prepmate.prepmate.entity.AIActivity;
+import com.prepmate.prepmate.repository.AIActivityRepository;
 import com.prepmate.prepmate.dto.ai.FlashcardResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AIService {
-
+        
+    private final AIActivityRepository aiActivityRepository;    
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
     private final GeminiService geminiService;
@@ -63,7 +68,17 @@ public class AIService {
                 note.getContent()
         );
 
-        return geminiService.generate(prompt);
+       String result = geminiService.generate(prompt);
+
+        aiActivityRepository.save(
+        AIActivity.builder()
+                .user(user)
+                .note(note)
+                .type(AIActivity.ActivityType.SUMMARY)
+                .build()
+        );
+
+        return result;
     }
 
     // =========================
@@ -111,7 +126,17 @@ public class AIService {
             question
     );
 
-    return geminiService.generate(prompt);
+    String result = geminiService.generate(prompt);
+
+aiActivityRepository.save(
+        AIActivity.builder()
+                .user(user)
+                .note(note)
+                .type(AIActivity.ActivityType.QUESTION)
+                .build()
+);
+
+return result;
         }
 
 
@@ -169,21 +194,32 @@ public class AIService {
                 note.getContent()
         );
 
-        String json =  geminiService.generateQuizJson(prompt);
+        String json = geminiService.generateQuizJson(prompt);
+
         try {
 
-    return objectMapper.readValue(
-            json,
-            QuizResponse.class
-    );
+        QuizResponse result = objectMapper.readValue(
+                json,
+                QuizResponse.class
+        );
 
-} catch (Exception e) {
+        aiActivityRepository.save(
+                AIActivity.builder()
+                        .user(user)
+                        .note(note)
+                        .type(AIActivity.ActivityType.QUIZ)
+                        .build()
+        );
 
-    throw new RuntimeException(
-            "Failed to parse quiz response",
-            e
-    );
-}
+        return result;
+
+        } catch (Exception e) {
+
+        throw new RuntimeException(
+                "Failed to parse quiz response",
+                e
+        );
+        }
         }
 
         public FlashcardResponse generateFlashcards(
@@ -242,22 +278,32 @@ public class AIService {
             note.getContent()
     );
 
-    String json = geminiService.generateFlashcardsJson(prompt);
+        String json = geminiService.generateFlashcardsJson(prompt);
 
-    try {
+        try {
 
-        return objectMapper.readValue(
+        FlashcardResponse result = objectMapper.readValue(
                 json,
                 FlashcardResponse.class
         );
 
-    } catch (Exception e) {
+        aiActivityRepository.save(
+                AIActivity.builder()
+                        .user(user)
+                        .note(note)
+                        .type(AIActivity.ActivityType.FLASHCARDS)
+                        .build()
+        );
+
+        return result;
+
+        } catch (Exception e) {
 
         throw new RuntimeException(
                 "Failed to parse flashcard response",
                 e
         );
-    }
+        }
 }
 
          private Note getUserNote(
