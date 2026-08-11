@@ -157,4 +157,37 @@ public class GeminiService {
         );
     }
 }
+
+public String generateFlashcardsJson(String prompt) {
+
+    try {
+
+        GenerateContentResponse response =
+                client.models.generateContent(
+                        "gemini-3.6-flash",
+                        prompt,
+                        null
+                );
+
+        String result = response.text();
+
+        if (result == null || result.isBlank()) {
+            throw new RuntimeException(
+                    "Gemini returned an empty flashcard response"
+            );
+        }
+
+        return result;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        throw new RuntimeException(
+                "Failed to generate flashcards: "
+                        + e.getMessage(),
+                e
+        );
+    }
+}
 }

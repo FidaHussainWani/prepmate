@@ -2,13 +2,17 @@ package com.prepmate.prepmate.controller;
 
 import com.prepmate.prepmate.dto.ai.AIResponse;
 import com.prepmate.prepmate.dto.ai.AISummaryRequest;
+import com.prepmate.prepmate.dto.ai.FlashcardResponse;
 import com.prepmate.prepmate.dto.ai.QuizResponse;
 import com.prepmate.prepmate.service.AIService;
 import com.prepmate.prepmate.dto.ai.QuizResponse;
+import com.prepmate.prepmate.dto.ai.AIFlashcardRequest;
+import com.prepmate.prepmate.dto.ai.FlashcardResponse;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import com.prepmate.prepmate.dto.ai.AIAskRequest;
+import com.prepmate.prepmate.dto.ai.AIFlashcardRequest;
 import com.prepmate.prepmate.dto.ai.AIQuizRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +80,18 @@ public AIResponse askQuestion(
                 authentication.getName()
         );
     }
+
+    @PostMapping("/flashcards")
+public FlashcardResponse generateFlashcards(
+        @Valid @RequestBody AIFlashcardRequest request,
+        Authentication authentication) {
+
+    return aiService.generateFlashcards(
+            request.getNoteId(),
+            request.getNumberOfCards(),
+            authentication.getName()
+    );
+}
 }
 
 

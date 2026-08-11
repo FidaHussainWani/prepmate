@@ -8,6 +8,7 @@ import com.prepmate.prepmate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prepmate.prepmate.dto.ai.QuizResponse;
+import com.prepmate.prepmate.dto.ai.FlashcardResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -184,6 +185,80 @@ public class AIService {
     );
 }
         }
+
+        public FlashcardResponse generateFlashcards(
+        Long noteId,
+        Integer numberOfCards,
+        String email) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    Note note = getUserNote(noteId, user);
+
+    if (numberOfCards == null ||
+            numberOfCards < 1 ||
+            numberOfCards > 30) {
+
+        numberOfCards = 10;
+    }
+
+    String prompt = """
+            You are PrepMate, an AI study assistant.
+
+            Create %d flashcards from the study note below.
+
+            Each flashcard must contain:
+
+            Question:
+            Answer:
+
+            Use only information present in the note.
+
+            Make the flashcards useful for revision
+            and exam preparation.
+
+            Return the result as JSON in this format:
+
+            {
+              "flashcards": [
+                {
+                  "question": "...",
+                  "answer": "..."
+                }
+              ]
+            }
+
+            NOTE TITLE:
+            %s
+
+            NOTE CONTENT:
+            %s
+            """.formatted(
+            numberOfCards,
+            note.getTitle(),
+            note.getContent()
+    );
+
+    String json = geminiService.generateFlashcardsJson(prompt);
+
+    try {
+
+        return objectMapper.readValue(
+                json,
+                FlashcardResponse.class
+        );
+
+    } catch (Exception e) {
+
+        throw new RuntimeException(
+                "Failed to parse flashcard response",
+                e
+        );
+    }
+}
 
          private Note getUserNote(
             Long noteId,
