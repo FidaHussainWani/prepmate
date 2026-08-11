@@ -1,3 +1,4 @@
+C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\config\JacksonConfig.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\controller\AIController.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\controller\AuthController.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\controller\CategoryController.java
@@ -8,6 +9,8 @@ C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\ai\AIQuizRequest.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\ai\AIResponse.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\ai\AISummaryRequest.java
+C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\ai\QuizQuestion.java
+C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\ai\QuizResponse.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\auth\AuthResponse.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\auth\LoginRequest.java
 C:\Users\ASUS\OneDrive\Desktop\prep\prepmate\prepmate\prepmate\src\main\java\com\prepmate\prepmate\dto\auth\RegisterRequest.java

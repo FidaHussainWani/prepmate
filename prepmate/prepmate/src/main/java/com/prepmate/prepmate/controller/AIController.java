@@ -2,7 +2,9 @@ package com.prepmate.prepmate.controller;
 
 import com.prepmate.prepmate.dto.ai.AIResponse;
 import com.prepmate.prepmate.dto.ai.AISummaryRequest;
+import com.prepmate.prepmate.dto.ai.QuizResponse;
 import com.prepmate.prepmate.service.AIService;
+import com.prepmate.prepmate.dto.ai.QuizResponse;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -64,17 +66,15 @@ public AIResponse askQuestion(
 }
 
     @PostMapping("/quiz")
-    public AIResponse generateQuiz(
+    public QuizResponse generateQuiz(
             @Valid @RequestBody AIQuizRequest request,
             Authentication authentication) {
 
-        String result = aiService.generateQuiz(
+        return aiService.generateQuiz(
                 request.getNoteId(),
                 request.getNumberOfQuestions(),
                 authentication.getName()
         );
-
-        return new AIResponse(result);
     }
 }
 

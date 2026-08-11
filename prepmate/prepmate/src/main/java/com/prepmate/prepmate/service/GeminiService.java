@@ -1,7 +1,13 @@
 
 package com.prepmate.prepmate.service;
 
+import com.google.genai.types.Schema;
+
+import java.util.List;
+import java.util.Map;
+
 import com.google.genai.Client;
+import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import org.springframework.stereotype.Service;
 
@@ -58,4 +64,97 @@ public class GeminiService {
             );
         }
     }
+    public String generateQuizJson(String prompt) {
+
+    try {
+
+        Schema quizSchema =
+                Schema.builder()
+                        .type("OBJECT")
+                        .properties(
+                                Map.of(
+                                        "questions",
+                                        Schema.builder()
+                                                .type("ARRAY")
+                                                .items(
+                                                        Schema.builder()
+                                                                .type("OBJECT")
+                                                                .properties(
+                                                                        Map.of(
+                                                                                "question",
+                                                                                Schema.builder()
+                                                                                        .type("STRING")
+                                                                                        .build(),
+
+                                                                                "options",
+                                                                                Schema.builder()
+                                                                                        .type("ARRAY")
+                                                                                        .items(
+                                                                                                Schema.builder()
+                                                                                                        .type("STRING")
+                                                                                                        .build()
+                                                                                        )
+                                                                                        .build(),
+
+                                                                                "correctAnswer",
+                                                                                Schema.builder()
+                                                                                        .type("STRING")
+                                                                                        .build(),
+
+                                                                                "explanation",
+                                                                                Schema.builder()
+                                                                                        .type("STRING")
+                                                                                        .build()
+                                                                        )
+                                                                )
+                                                                .required(
+                                                                        List.of(
+                                                                                "question",
+                                                                                "options",
+                                                                                "correctAnswer",
+                                                                                "explanation"
+                                                                        )
+                                                                )
+                                                                .build()
+                                                )
+                                                .build()
+                                )
+                        )
+                        .required(List.of("questions"))
+                        .build();
+
+        GenerateContentConfig config =
+                GenerateContentConfig.builder()
+                        .responseMimeType("application/json")
+                        .responseSchema(quizSchema)
+                        .build();
+
+        GenerateContentResponse response =
+                client.models.generateContent(
+                        "gemini-3.6-flash",
+                        prompt,
+                        config
+                );
+
+        String result = response.text();
+
+        if (result == null || result.isBlank()) {
+            throw new RuntimeException(
+                    "Gemini returned an empty quiz response"
+            );
+        }
+
+        return result;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        throw new RuntimeException(
+                "Failed to generate quiz: "
+                        + e.getMessage(),
+                e
+        );
+    }
+}
 }

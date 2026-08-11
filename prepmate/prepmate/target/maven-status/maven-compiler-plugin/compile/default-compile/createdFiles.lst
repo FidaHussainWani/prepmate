@@ -19,6 +19,8 @@ com\prepmate\prepmate\dto\auth\AuthResponse.class
 com\prepmate\prepmate\security\JwtAuthenticationFilter.class
 com\prepmate\prepmate\entity\User.class
 com\prepmate\prepmate\controller\AuthController.class
+com\prepmate\prepmate\dto\ai\QuizResponse.class
+com\prepmate\prepmate\config\JacksonConfig.class
 com\prepmate\prepmate\dto\note\NoteResponse.class
 com\prepmate\prepmate\controller\TagController.class
 com\prepmate\prepmate\repository\NoteRepository.class
@@ -30,6 +32,7 @@ com\prepmate\prepmate\service\AuthService.class
 com\prepmate\prepmate\entity\Category$CategoryBuilder.class
 com\prepmate\prepmate\entity\Category.class
 com\prepmate\prepmate\controller\CategoryController.class
+com\prepmate\prepmate\dto\ai\QuizQuestion.class
 com\prepmate\prepmate\controller\TestController.class
 com\prepmate\prepmate\service\AIService.class
 com\prepmate\prepmate\dto\ai\AIQuizRequest.class

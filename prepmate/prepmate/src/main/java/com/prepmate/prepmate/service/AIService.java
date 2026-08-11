@@ -1,10 +1,13 @@
 package com.prepmate.prepmate.service;
 
+import com.prepmate.prepmate.dto.ai.QuizResponse;
 import com.prepmate.prepmate.entity.Note;
 import com.prepmate.prepmate.entity.User;
 import com.prepmate.prepmate.repository.NoteRepository;
 import com.prepmate.prepmate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prepmate.prepmate.dto.ai.QuizResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +17,7 @@ public class AIService {
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
     private final GeminiService geminiService;
+    private final ObjectMapper objectMapper;
 
          // =========================
         // SUMMARIZE NOTE
@@ -110,7 +114,7 @@ public class AIService {
         }
 
 
-        public String generateQuiz(
+        public QuizResponse generateQuiz(
                 Long noteId,
                 Integer numberOfQuestions,
                 String email) {
@@ -164,7 +168,21 @@ public class AIService {
                 note.getContent()
         );
 
-        return geminiService.generate(prompt);
+        String json =  geminiService.generateQuizJson(prompt);
+        try {
+
+    return objectMapper.readValue(
+            json,
+            QuizResponse.class
+    );
+
+} catch (Exception e) {
+
+    throw new RuntimeException(
+            "Failed to parse quiz response",
+            e
+    );
+}
         }
 
          private Note getUserNote(
