@@ -13,6 +13,10 @@ public interface AIActivityRepository
             User user
     );
 
+      List<AIActivity> findTop10ByUserOrderByCreatedAtDesc(
+            User user
+    );
+    
     long countByUserAndType(
             User user,
             AIActivity.ActivityType type

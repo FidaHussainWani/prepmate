@@ -1,13 +1,15 @@
 package com.prepmate.prepmate.service;
 
 import com.prepmate.prepmate.dto.dashboard.DashboardResponse;
-import com.prepmate.prepmate.entity.AIActivity;
-import com.prepmate.prepmate.entity.User;
 import com.prepmate.prepmate.repository.AIActivityRepository;
+import com.prepmate.prepmate.dto.dashboard.ActivityResponse;
 import com.prepmate.prepmate.repository.NoteRepository;
 import com.prepmate.prepmate.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.prepmate.prepmate.entity.AIActivity;
+import com.prepmate.prepmate.entity.User;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -63,4 +65,27 @@ public class DashboardService {
                 flashcards
         );
     }
+    public List<ActivityResponse> getRecentActivities(
+        String email) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    return aiActivityRepository
+            .findTop10ByUserOrderByCreatedAtDesc(user)
+            .stream()
+            .map(activity ->
+                    new ActivityResponse(
+                            activity.getId(),
+                            activity.getNote() != null
+                                    ? activity.getNote().getId()
+                                    : null,
+                            activity.getType(),
+                            activity.getCreatedAt()
+                    )
+            )
+            .toList();
+}
 }
