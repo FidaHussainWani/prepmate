@@ -22,6 +22,7 @@ com\prepmate\prepmate\controller\AuthController.class
 com\prepmate\prepmate\dto\note\NoteResponse.class
 com\prepmate\prepmate\controller\TagController.class
 com\prepmate\prepmate\repository\NoteRepository.class
+com\prepmate\prepmate\dto\ai\AIAskRequest.class
 com\prepmate\prepmate\dto\tag\TagRequest.class
 com\prepmate\prepmate\dto\auth\RegisterRequest.class
 com\prepmate\prepmate\entity\Tag$TagBuilder.class
@@ -31,6 +32,7 @@ com\prepmate\prepmate\entity\Category.class
 com\prepmate\prepmate\controller\CategoryController.class
 com\prepmate\prepmate\controller\TestController.class
 com\prepmate\prepmate\service\AIService.class
+com\prepmate\prepmate\dto\ai\AIQuizRequest.class
 com\prepmate\prepmate\PrepmateApplication.class
 com\prepmate\prepmate\security\SecurityConfig.class
 com\prepmate\prepmate\dto\auth\LoginRequest.class

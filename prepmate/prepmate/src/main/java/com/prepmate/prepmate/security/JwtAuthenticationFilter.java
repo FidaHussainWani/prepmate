@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+import java.util.Collections;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -66,6 +66,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
 
             SecurityContextHolder.clearContext();
+            
+            System.out.println(
+                    "JWT authentication failed: "
+                            + e.getMessage()
+            );
         }
 
         filterChain.doFilter(request, response);

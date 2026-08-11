@@ -15,6 +15,10 @@ public class AIService {
     private final UserRepository userRepository;
     private final GeminiService geminiService;
 
+         // =========================
+        // SUMMARIZE NOTE
+        // =========================
+
     public String summarizeNote(
             Long noteId,
             String email) {
@@ -56,4 +60,123 @@ public class AIService {
 
         return geminiService.generate(prompt);
     }
+
+    // =========================
+    // ASK QUESTION
+    // =========================
+
+    public String askQuestion(
+        Long noteId,
+        String question,
+        String email) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    Note note = noteRepository
+            .findByIdAndUser(noteId, user)
+            .orElseThrow(() ->
+                    new RuntimeException("Note not found"));
+
+    String prompt = """
+            You are PrepMate, an AI study assistant.
+
+            Answer the student's question using ONLY
+            the information provided in the note below.
+
+            If the answer cannot be found in the note,
+            clearly say that the information is not
+            available in the provided note.
+
+            Explain the answer in simple language.
+
+            NOTE TITLE:
+            %s
+
+            NOTE CONTENT:
+            %s
+
+            STUDENT QUESTION:
+            %s
+            """.formatted(
+            note.getTitle(),
+            note.getContent(),
+            question
+    );
+
+    return geminiService.generate(prompt);
+        }
+
+
+        public String generateQuiz(
+                Long noteId,
+                Integer numberOfQuestions,
+                String email) {
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Note note = noteRepository
+                .findByIdAndUser(noteId, user)
+                .orElseThrow(() ->
+                        new RuntimeException("Note not found"));
+
+        if (numberOfQuestions == null ||
+                numberOfQuestions < 1 ||
+                numberOfQuestions > 20) {
+
+                numberOfQuestions = 5;
+        }
+
+        String prompt = """
+                You are PrepMate, an AI study assistant.
+
+                Create %d multiple-choice questions
+                from the study note below.
+
+                For every question provide:
+
+                Question:
+                A.
+                B.
+                C.
+                D.
+                Correct Answer:
+                Explanation:
+
+                Make the questions useful for exam preparation.
+
+                Do not create questions about information
+                that is not present in the note.
+
+                NOTE TITLE:
+                %s
+
+                NOTE CONTENT:
+                %s
+                """.formatted(
+                numberOfQuestions,
+                note.getTitle(),
+                note.getContent()
+        );
+
+        return geminiService.generate(prompt);
+        }
+
+         private Note getUserNote(
+            Long noteId,
+            User user) {
+
+        return noteRepository
+                .findByIdAndUser(noteId, user)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Note not found"));
+    }
+
+
 }
