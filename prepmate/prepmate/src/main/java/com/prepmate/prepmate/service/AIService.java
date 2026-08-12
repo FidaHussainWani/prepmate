@@ -8,10 +8,8 @@ import com.prepmate.prepmate.repository.NoteRepository;
 import com.prepmate.prepmate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prepmate.prepmate.dto.ai.QuizResponse;
 
 import com.prepmate.prepmate.entity.AIActivity;
-import com.prepmate.prepmate.repository.AIActivityRepository;
 import com.prepmate.prepmate.dto.ai.FlashcardResponse;
 import org.springframework.stereotype.Service;
 
@@ -232,7 +230,10 @@ return result;
             .orElseThrow(() ->
                     new RuntimeException("User not found"));
 
-    Note note = getUserNote(noteId, user);
+    Note note = noteRepository
+        .findByIdAndUser(noteId, user)
+        .orElseThrow(() ->
+                new RuntimeException("Note not found"));
 
     if (numberOfCards == null ||
             numberOfCards < 1 ||
@@ -244,28 +245,32 @@ return result;
     String prompt = """
             You are PrepMate, an AI study assistant.
 
-            Create %d flashcards from the study note below.
+            Create exactly %d flashcards from the study note below.
 
             Each flashcard must contain:
+            - question
+            - answer
 
-            Question:
-            Answer:
+            Use ONLY information present in the note.
 
-            Use only information present in the note.
+            Return ONLY valid JSON.
 
-            Make the flashcards useful for revision
-            and exam preparation.
+            Do NOT use markdown.
+            Do NOT use ```json.
+            Do NOT add any explanation before or after the JSON.
 
-            Return the result as JSON in this format:
+            Return EXACTLY this structure:
 
             {
               "flashcards": [
                 {
-                  "question": "...",
-                  "answer": "..."
+                  "question": "Question here",
+                  "answer": "Answer here"
                 }
               ]
             }
+
+            Create exactly %d flashcards.
 
             NOTE TITLE:
             %s
@@ -274,48 +279,83 @@ return result;
             %s
             """.formatted(
             numberOfCards,
+            numberOfCards,
             note.getTitle(),
             note.getContent()
     );
 
-        String json = geminiService.generateFlashcardsJson(prompt);
+    String json =
+            geminiService.generateFlashcardsJson(prompt);
 
-        try {
+    try {
 
-        FlashcardResponse result = objectMapper.readValue(
-                json,
-                FlashcardResponse.class
+        System.out.println("========== FLASHCARD RAW RESPONSE ==========");
+        System.out.println(json);
+
+        // Remove markdown fences if Gemini still adds them
+        json = json
+                .replace("```json", "")
+                .replace("```", "")
+                .trim();
+
+        // Extract JSON object
+        int start = json.indexOf("{");
+        int end = json.lastIndexOf("}");
+
+        if (start == -1 || end == -1) {
+
+            throw new RuntimeException(
+                    "No valid JSON object found in Gemini response"
+            );
+        }
+
+        json = json.substring(
+                start,
+                end + 1
         );
+
+        System.out.println("========== FLASHCARD CLEAN JSON ==========");
+        System.out.println(json);
+
+        FlashcardResponse result =
+                objectMapper.readValue(
+                        json,
+                        FlashcardResponse.class
+                );
+
+        if (result.getFlashcards() == null ||
+                result.getFlashcards().isEmpty()) {
+
+            throw new RuntimeException(
+                    "Gemini returned no flashcards"
+            );
+        }
 
         aiActivityRepository.save(
                 AIActivity.builder()
                         .user(user)
                         .note(note)
-                        .type(AIActivity.ActivityType.FLASHCARDS)
+                        .type(
+                                AIActivity.ActivityType.FLASHCARDS
+                        )
                         .build()
         );
 
         return result;
 
-        } catch (Exception e) {
+    } catch (Exception e) {
+
+        System.out.println(
+                "========== FLASHCARD PARSE ERROR =========="
+        );
+
+        e.printStackTrace();
 
         throw new RuntimeException(
                 "Failed to parse flashcard response",
                 e
         );
-        }
-}
-
-         private Note getUserNote(
-            Long noteId,
-            User user) {
-
-        return noteRepository
-                .findByIdAndUser(noteId, user)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Note not found"));
     }
-
+}
 
 }
