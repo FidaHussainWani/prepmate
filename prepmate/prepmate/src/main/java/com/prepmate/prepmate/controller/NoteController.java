@@ -33,12 +33,18 @@ public class NoteController {
     public Page<NoteResponse> getAllNotes(
             Authentication authentication,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Boolean favorite,
+            @RequestParam(required = false) Long categoryId) {
 
-        return noteService.getNotes(
+        return noteService.getFilteredNotes(
                 authentication.getName(),
                 page,
-                size
+                size,
+                keyword,
+                favorite,
+                categoryId
         );
     }
 

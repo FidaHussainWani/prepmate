@@ -297,4 +297,64 @@ public Page<NoteResponse> getNotes(
             .findByUser(user, pageable)
             .map(this::convertToResponse);
 }
+public Page<NoteResponse> getFilteredNotes(
+        String email,
+        int page,
+        int size,
+        String keyword,
+        Boolean favorite,
+        Long categoryId) {
+
+    User user = getUser(email);
+
+    if (page < 0) {
+        page = 0;
+    }
+
+    if (size < 1 || size > 50) {
+        size = 10;
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Note> notes;
+
+    if (keyword != null && !keyword.isBlank()) {
+
+        notes = noteRepository
+                .findByUserAndTitleContainingIgnoreCase(
+                        user,
+                        keyword,
+                        pageable
+                );
+
+    } else if (favorite != null) {
+
+        notes = noteRepository
+                .findByUserAndFavorite(
+                        user,
+                        favorite,
+                        pageable
+                );
+
+    } else if (categoryId != null) {
+
+        notes = noteRepository
+                .findByUserAndCategoryId(
+                        user,
+                        categoryId,
+                        pageable
+                );
+
+    } else {
+
+        notes = noteRepository
+                .findByUser(
+                        user,
+                        pageable
+                );
+    }
+
+    return notes.map(this::convertToResponse);
+}
 }
