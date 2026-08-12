@@ -1,0 +1,105 @@
+.tags-card {
+    max-width: 900px;
+    margin: 0 auto 22px;
+    background: white;
+    border: 1px solid #e8edf5;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+.tags-card h2 {
+    margin-top: 0;
+    color: #172554;
+}
+
+.tag-create-form {
+    display: flex;
+    gap: 10px;
+}
+
+.tag-create-form input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid #dbe3ef;
+    border-radius: 9px;
+    outline: none;
+}
+
+.tag-create-form input:focus {
+    border-color: #6366f1;
+}
+
+.tag-create-form button {
+    border: none;
+    background: #172554;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.tag-create-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tags-error {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 12px 15px;
+    border-radius: 9px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.tag-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #3730a3;
+    border-radius: 10px;
+    padding: 8px 10px 8px 13px;
+}
+
+.tag-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.tag-delete {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 3px;
+}
+
+.tags-empty {
+    text-align: center;
+    padding: 45px 20px;
+    color: #64748b;
+}
+
+.tags-message {
+    color: #64748b;
+}
+
+@media (max-width: 650px) {
+
+    .tag-create-form {
+        flex-direction: column;
+    }
+
+    .tag-create-form button {
+        width: 100%;
+    }
+}

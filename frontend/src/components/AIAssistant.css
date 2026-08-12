@@ -1,0 +1,397 @@
+/* =========================
+   AI ASSISTANT
+========================= */
+
+.ai-assistant {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ai-assistant > h2 {
+    margin: 0 0 8px;
+    color: #172554;
+    font-size: 25px;
+}
+
+.ai-assistant > hr {
+    border: none;
+    border-top: 1px solid #edf1f6;
+    margin: 25px 0;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.ai-assistant > p {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 12px 15px;
+    border-radius: 9px;
+    margin: 15px 0;
+}
+
+/* =========================
+   AI CARD
+========================= */
+
+.ai-card {
+    background: #ffffff;
+    border: 1px solid #e8edf5;
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 5px;
+}
+
+.ai-card h3 {
+    margin: 0 0 15px;
+    color: #172554;
+    font-size: 18px;
+}
+
+.ai-card h4 {
+    color: #172554;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.ai-button,
+.ai-card > button,
+.ai-assistant button {
+    border: none;
+    background: #172554;
+    color: white;
+
+    padding: 11px 17px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.ai-button:hover:not(:disabled),
+.ai-card > button:hover:not(:disabled),
+.ai-assistant button:hover:not(:disabled) {
+    background: #1e3a8a;
+}
+
+.ai-assistant button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.ai-card > div {
+    margin-top: 20px;
+}
+
+.ai-card > div h4 {
+    margin-bottom: 8px;
+}
+
+.ai-card > div p {
+    color: #475569;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+/* =========================
+   ASK AI
+========================= */
+
+.ai-assistant form {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.ai-question-input {
+    flex: 1;
+
+    min-width: 0;
+
+    border: 1px solid #dbe3ef;
+
+    border-radius: 10px;
+
+    padding: 12px 14px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    color: #172033;
+
+    transition: 0.2s ease;
+}
+
+.ai-question-input:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.ai-response {
+    margin-top: 18px;
+
+    padding: 17px;
+
+    border-radius: 11px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+}
+
+.ai-response h4 {
+    margin: 0 0 8px;
+}
+
+.ai-response p {
+    margin: 0;
+
+    color: #475569;
+
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+}
+
+/* =========================
+   QUIZ
+========================= */
+
+.quiz-question {
+    margin-top: 20px;
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e8edf5;
+
+    border-radius: 12px;
+}
+
+.quiz-question > h4 {
+    margin-top: 0;
+}
+
+.quiz-question > div {
+    margin-top: 22px;
+
+    padding: 18px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+}
+
+.quiz-question > div > h4 {
+    line-height: 1.6;
+
+    margin-top: 0;
+}
+
+.quiz-option {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin: 9px 0;
+
+    padding: 11px 13px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    color: #475569;
+
+    transition: 0.2s ease;
+}
+
+.quiz-option:hover {
+    background: #eef2ff;
+
+    border-color: #a5b4fc;
+}
+
+.quiz-option input {
+    accent-color: #4f46e5;
+}
+
+.quiz-question > div > p {
+    margin-top: 13px;
+
+    color: #475569;
+
+    line-height: 1.5;
+}
+
+/* =========================
+   FLASHCARDS
+========================= */
+
+.flashcard {
+    min-height: 220px;
+
+    margin-top: 15px;
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f8fafc
+    );
+
+    border: 1px solid #c7d2fe;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.flashcard:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.flashcard h4 {
+    margin: 0 0 12px;
+
+    color: #3730a3;
+
+    font-size: 16px;
+}
+
+.flashcard p {
+    color: #334155;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+
+    max-width: 700px;
+
+    margin: 0 auto 12px;
+}
+
+.flashcard small {
+    color: #64748b;
+}
+
+/* =========================
+   FLASHCARD NAVIGATION
+========================= */
+
+.flashcard-navigation {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+.flashcard-navigation button {
+    min-width: 110px;
+}
+
+/* =========================
+   CARD COUNTER
+========================= */
+
+.ai-card > div > p:first-child {
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+
+    .ai-card {
+        padding: 18px;
+    }
+
+    .ai-assistant form {
+        flex-direction: column;
+    }
+
+    .ai-question-input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .ai-button {
+        width: 100%;
+    }
+
+    .flashcard {
+        min-height: 190px;
+
+        padding: 22px;
+    }
+
+    .flashcard-navigation {
+        flex-direction: column;
+    }
+
+    .flashcard-navigation button {
+        width: 100%;
+    }
+
+    .quiz-question {
+        padding: 12px;
+    }
+
+    .quiz-question > div {
+        padding: 14px;
+    }
+}
