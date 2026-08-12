@@ -1,5 +1,6 @@
 package com.prepmate.prepmate.service;
 
+import com.prepmate.prepmate.dto.dashboard.StatisticsResponse;
 import com.prepmate.prepmate.dto.dashboard.DashboardResponse;
 import com.prepmate.prepmate.repository.AIActivityRepository;
 import com.prepmate.prepmate.dto.dashboard.ActivityResponse;
@@ -87,5 +88,32 @@ public class DashboardService {
                     )
             )
             .toList();
+}
+
+public StatisticsResponse getStatistics(String email) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    long totalNotes =
+            noteRepository.countByUser(user);
+
+    long favoriteNotes =
+            noteRepository.countByUserAndFavoriteTrue(user);
+
+    long notesWithCategories =
+            noteRepository.countByUserAndCategoryIsNotNull(user);
+
+    long notesWithoutCategories =
+            noteRepository.countByUserAndCategoryIsNull(user);
+
+    return new StatisticsResponse(
+            totalNotes,
+            favoriteNotes,
+            notesWithCategories,
+            notesWithoutCategories
+    );
 }
 }

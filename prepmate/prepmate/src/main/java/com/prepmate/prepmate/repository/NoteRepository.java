@@ -30,9 +30,12 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
             User user,
             Long categoryId
     );
-     long countByUser(User user);
-
+    
+    
+    long countByUser(User user);
     long countByUserAndFavoriteTrue(User user);
+    long countByUserAndCategoryIsNotNull(User user);
+    long countByUserAndCategoryIsNull(User user);
 
         // Pagination
     Page<Note> findByUser(
@@ -56,4 +59,5 @@ Page<Note> findByUserAndCategoryId(
         Long categoryId,
         Pageable pageable
 );
+
 }

@@ -1,10 +1,11 @@
 package com.prepmate.prepmate.controller;
 
 import com.prepmate.prepmate.dto.dashboard.DashboardResponse;
+import com.prepmate.prepmate.dto.dashboard.StatisticsResponse;
 import com.prepmate.prepmate.service.DashboardService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import com.prepmate.prepmate.dto.dashboard.ActivityResponse;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -25,11 +26,19 @@ public class DashboardController {
         );
     }
     @GetMapping("/activity")
-public List<ActivityResponse> getRecentActivities(
-        Authentication authentication) {
+    public List<ActivityResponse> getRecentActivities(
+            Authentication authentication) {
 
-    return dashboardService.getRecentActivities(
-            authentication.getName()
-    );
-}
+        return dashboardService.getRecentActivities(
+                authentication.getName()
+        );
+    }
+    @GetMapping("/statistics")
+    public StatisticsResponse getStatistics(
+            Authentication authentication) {
+
+        return dashboardService.getStatistics(
+                authentication.getName()
+        );
+    }
 }
