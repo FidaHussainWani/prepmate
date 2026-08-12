@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -29,11 +30,15 @@ public class NoteController {
     }
 
     @GetMapping
-    public List<NoteResponse> getAllNotes(
-            Authentication authentication) {
+    public Page<NoteResponse> getAllNotes(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        return noteService.getAllNotes(
-                authentication.getName()
+        return noteService.getNotes(
+                authentication.getName(),
+                page,
+                size
         );
     }
 

@@ -3,6 +3,8 @@ package com.prepmate.prepmate.repository;
 import com.prepmate.prepmate.entity.Note;
 import com.prepmate.prepmate.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,4 +32,10 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
      long countByUser(User user);
 
     long countByUserAndFavoriteTrue(User user);
+
+        // Pagination
+    Page<Note> findByUser(
+            User user,
+            Pageable pageable
+    );
 }

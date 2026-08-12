@@ -7,7 +7,9 @@ import com.prepmate.prepmate.entity.User;
 import com.prepmate.prepmate.repository.CategoryRepository;
 import com.prepmate.prepmate.repository.NoteRepository;
 import com.prepmate.prepmate.repository.UserRepository;
-import com.prepmate.prepmate.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import com.prepmate.prepmate.entity.Category;
 import org.springframework.stereotype.Service;
@@ -269,5 +271,30 @@ public class NoteService {
             note.getCreatedAt(),
             note.getUpdatedAt()
     );
+}
+public Page<NoteResponse> getNotes(
+        String email,
+        int page,
+        int size) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
+
+    if (page < 0) {
+        page = 0;
+    }
+
+    if (size < 1 || size > 50) {
+        size = 10;
+    }
+
+    Pageable pageable =
+            PageRequest.of(page, size);
+
+    return noteRepository
+            .findByUser(user, pageable)
+            .map(this::convertToResponse);
 }
 }
