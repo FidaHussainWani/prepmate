@@ -7,30 +7,24 @@
     box-sizing: border-box;
 }
 
-.ai-assistant > h2 {
-    margin: 0 0 8px;
-    color: #172554;
-    font-size: 25px;
-}
-
-.ai-assistant > hr {
-    border: none;
-    border-top: 1px solid #edf1f6;
-    margin: 25px 0;
-}
 
 /* =========================
    ERROR
 ========================= */
 
-.ai-assistant > p {
+.ai-error {
+    margin-bottom: 18px;
+    padding: 12px 15px;
+
     background: #fef2f2;
     border: 1px solid #fecaca;
+    border-radius: 10px;
+
     color: #b91c1c;
-    padding: 12px 15px;
-    border-radius: 9px;
-    margin: 15px 0;
+    font-size: 13px;
+    line-height: 1.5;
 }
+
 
 /* =========================
    AI CARD
@@ -38,82 +32,172 @@
 
 .ai-card {
     background: #ffffff;
+
     border: 1px solid #e8edf5;
-    border-radius: 15px;
+    border-radius: 16px;
+
     padding: 22px;
-    margin-bottom: 5px;
+    margin-bottom: 16px;
+
+    box-shadow:
+        0 3px 14px rgba(15, 23, 42, 0.035);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.ai-card h3 {
-    margin: 0 0 15px;
-    color: #172554;
-    font-size: 18px;
+.ai-card:hover {
+    border-color: #dbe3ef;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.05);
 }
 
-.ai-card h4 {
-    color: #172554;
-}
 
 /* =========================
-   BUTTONS
+   CARD HEADER
 ========================= */
 
-.ai-button,
-.ai-card > button,
-.ai-assistant button {
+.ai-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.ai-card-header h3 {
+    margin: 0;
+
+    color: #172554;
+
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.ai-card-header p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================
+   MAIN BUTTON
+========================= */
+
+.ai-button {
     border: none;
+
     background: #172554;
     color: white;
 
-    padding: 11px 17px;
+    padding: 10px 16px;
 
     border-radius: 9px;
 
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 
     cursor: pointer;
 
-    transition: 0.2s ease;
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
 }
 
-.ai-button:hover:not(:disabled),
-.ai-card > button:hover:not(:disabled),
-.ai-assistant button:hover:not(:disabled) {
+.ai-button:hover:not(:disabled) {
     background: #1e3a8a;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px rgba(23, 37, 84, 0.18);
 }
 
-.ai-assistant button:disabled {
+.ai-button:active:not(:disabled) {
+    transform: translateY(0);
+
+    box-shadow: none;
+}
+
+.ai-button:disabled {
     opacity: 0.55;
+
     cursor: not-allowed;
 }
 
+
 /* =========================
-   SUMMARY
+   AI RESPONSE
 ========================= */
 
-.ai-card > div {
-    margin-top: 20px;
+.ai-response {
+    margin-top: 15px;
+
+    padding: 15px 16px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 11px;
+
+    animation: responseAppear 0.25s ease;
 }
 
-.ai-card > div h4 {
-    margin-bottom: 8px;
+.ai-response h4 {
+    margin: 0 0 7px;
+
+    color: #172554;
+
+    font-size: 14px;
 }
 
-.ai-card > div p {
+.ai-response p {
+    margin: 0;
+
     color: #475569;
+
+    font-size: 13px;
+
     line-height: 1.7;
+
     white-space: pre-wrap;
 }
+
+@keyframes responseAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
 
 /* =========================
    ASK AI
 ========================= */
 
-.ai-assistant form {
+.ai-question-form {
     display: flex;
-    gap: 10px;
-    margin-top: 12px;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 4px;
 }
 
 .ai-question-input {
@@ -121,19 +205,33 @@
 
     min-width: 0;
 
+    height: 42px;
+
+    box-sizing: border-box;
+
     border: 1px solid #dbe3ef;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
-    padding: 12px 14px;
+    padding: 0 13px;
 
-    font-size: 14px;
-
-    outline: none;
+    background: white;
 
     color: #172033;
 
-    transition: 0.2s ease;
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.ai-question-input::placeholder {
+    color: #94a3b8;
 }
 
 .ai-question-input:focus {
@@ -143,40 +241,36 @@
         0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.ai-response {
-    margin-top: 18px;
-
-    padding: 17px;
-
-    border-radius: 11px;
-
+.ai-question-input:disabled {
     background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
 }
 
-.ai-response h4 {
-    margin: 0 0 8px;
-}
-
-.ai-response p {
-    margin: 0;
-
-    color: #475569;
-
-    line-height: 1.7;
-
-    white-space: pre-wrap;
-}
 
 /* =========================
-   QUIZ
+   QUIZ CONTAINER
+========================= */
+
+.quiz-container {
+    margin-top: 17px;
+}
+
+.quiz-container > h4 {
+    margin: 0 0 12px;
+
+    color: #172554;
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   QUIZ QUESTION
 ========================= */
 
 .quiz-question {
-    margin-top: 20px;
+    margin-bottom: 13px;
 
-    padding: 18px;
+    padding: 16px;
 
     background: #f8fafc;
 
@@ -185,26 +279,31 @@
     border-radius: 12px;
 }
 
-.quiz-question > h4 {
-    margin-top: 0;
+.quiz-question:last-child {
+    margin-bottom: 0;
 }
 
-.quiz-question > div {
-    margin-top: 22px;
+.quiz-question h4 {
+    margin: 0 0 12px;
 
-    padding: 18px;
+    color: #334155;
 
-    background: white;
+    font-size: 14px;
 
-    border: 1px solid #e5e7eb;
-
-    border-radius: 12px;
+    line-height: 1.55;
 }
 
-.quiz-question > div > h4 {
-    line-height: 1.6;
 
-    margin-top: 0;
+/* =========================
+   QUIZ OPTIONS
+========================= */
+
+.quiz-options {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
 }
 
 .quiz-option {
@@ -214,19 +313,28 @@
 
     gap: 9px;
 
-    margin: 9px 0;
+    min-height: 40px;
 
-    padding: 11px 13px;
+    box-sizing: border-box;
 
-    border: 1px solid #e2e8f0;
+    padding: 8px 11px;
+
+    background: white;
+
+    border: 1px solid #dbe3ef;
 
     border-radius: 8px;
 
-    cursor: pointer;
-
     color: #475569;
 
-    transition: 0.2s ease;
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .quiz-option:hover {
@@ -235,38 +343,108 @@
     border-color: #a5b4fc;
 }
 
+.quiz-option.selected {
+    background: #eef2ff;
+
+    border-color: #6366f1;
+
+    color: #3730a3;
+
+    font-weight: 600;
+}
+
 .quiz-option input {
+    margin: 0;
+
     accent-color: #4f46e5;
+
+    cursor: pointer;
 }
 
-.quiz-question > div > p {
-    margin-top: 13px;
-
-    color: #475569;
-
-    line-height: 1.5;
-}
 
 /* =========================
-   FLASHCARDS
+   QUIZ RESULT
+========================= */
+
+.quiz-result {
+    margin-top: 10px;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+.quiz-result.correct {
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+
+    color: #166534;
+}
+
+.quiz-result.incorrect {
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #b91c1c;
+}
+
+.quiz-result p {
+    margin: 5px 0 0;
+}
+
+
+/* =========================
+   FLASHCARD CONTAINER
+========================= */
+
+.flashcard-container {
+    margin-top: 17px;
+}
+
+.flashcard-progress {
+    margin-bottom: 9px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-align: center;
+}
+
+
+/* =========================
+   FLASHCARD
 ========================= */
 
 .flashcard {
-    min-height: 220px;
+    width: 100%;
 
-    margin-top: 15px;
+    min-height: 210px;
 
-    padding: 30px;
+    padding: 28px;
 
-    border-radius: 16px;
-
-    background: linear-gradient(
-        135deg,
-        #eef2ff,
-        #f8fafc
-    );
+    box-sizing: border-box;
 
     border: 1px solid #c7d2fe;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f8fafc
+        );
+
+    color: #172554;
 
     display: flex;
 
@@ -280,6 +458,8 @@
 
     user-select: none;
 
+    font-family: inherit;
+
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -289,32 +469,47 @@
     transform: translateY(-2px);
 
     box-shadow:
-        0 8px 20px rgba(15, 23, 42, 0.08);
+        0 8px 20px rgba(15, 23, 42, 0.07);
+}
+
+.flashcard:active {
+    transform: translateY(0);
+}
+
+.flashcard-label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #6366f1;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
 }
 
 .flashcard h4 {
-    margin: 0 0 12px;
+    max-width: 680px;
 
-    color: #3730a3;
+    margin: 0 auto 11px;
 
-    font-size: 16px;
-}
-
-.flashcard p {
-    color: #334155;
+    color: #172554;
 
     font-size: 17px;
 
-    line-height: 1.7;
-
-    max-width: 700px;
-
-    margin: 0 auto 12px;
+    line-height: 1.55;
 }
 
 .flashcard small {
     color: #64748b;
+
+    font-size: 11px;
 }
+
 
 /* =========================
    FLASHCARD NAVIGATION
@@ -323,60 +518,126 @@
 .flashcard-navigation {
     display: flex;
 
-    align-items: center;
-
     justify-content: center;
 
-    gap: 10px;
+    align-items: center;
 
-    margin-top: 15px;
+    gap: 8px;
+
+    margin-top: 12px;
 }
 
 .flashcard-navigation button {
-    min-width: 110px;
-}
+    border: 1px solid #dbe3ef;
 
-/* =========================
-   CARD COUNTER
-========================= */
+    background: white;
 
-.ai-card > div > p:first-child {
-    color: #64748b;
+    color: #475569;
 
-    font-size: 13px;
+    padding: 9px 13px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 12px;
 
     font-weight: 600;
 
-    margin-bottom: 10px;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
+.flashcard-navigation button:hover:not(:disabled) {
+    background: #eef2ff;
+
+    border-color: #a5b4fc;
+
+    color: #3730a3;
+}
+
+.flashcard-navigation button:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+}
+
+
+/* CENTER FLASHCARD BUTTON */
+
+.flashcard-navigation button:nth-child(2) {
+    background: #172554;
+
+    border-color: #172554;
+
+    color: white;
+}
+
+.flashcard-navigation button:nth-child(2):hover:not(:disabled) {
+    background: #1e3a8a;
+
+    border-color: #1e3a8a;
+
+    color: white;
+}
+
+
 /* =========================
-   RESPONSIVE
+   MOBILE
 ========================= */
 
 @media (max-width: 700px) {
 
     .ai-card {
-        padding: 18px;
+        padding: 17px;
     }
 
-    .ai-assistant form {
+    .ai-card-header {
+        align-items: flex-start;
+
         flex-direction: column;
+
+        gap: 8px;
+    }
+
+    .ai-question-form {
+        flex-direction: column;
+
+        align-items: stretch;
     }
 
     .ai-question-input {
         width: 100%;
-        box-sizing: border-box;
     }
 
-    .ai-button {
+    .ai-question-form .ai-button {
         width: 100%;
+    }
+
+    .ai-card > .ai-button {
+        width: 100%;
+    }
+
+    .quiz-question {
+        padding: 13px;
+    }
+
+    .quiz-option {
+        padding: 9px 10px;
     }
 
     .flashcard {
         min-height: 190px;
 
-        padding: 22px;
+        padding: 22px 16px;
+    }
+
+    .flashcard h4 {
+        font-size: 15px;
     }
 
     .flashcard-navigation {
@@ -385,13 +646,5 @@
 
     .flashcard-navigation button {
         width: 100%;
-    }
-
-    .quiz-question {
-        padding: 12px;
-    }
-
-    .quiz-question > div {
-        padding: 14px;
     }
 }

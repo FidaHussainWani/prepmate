@@ -1,6 +1,7 @@
 import AIAssistant from "../components/AIAssistant";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 import api from "../services/api";
 import "./NoteDetails.css";
 
@@ -17,9 +18,13 @@ function NoteDetails() {
         loadNote();
     }, [id]);
 
+
     const loadNote = async () => {
 
         try {
+
+            setLoading(true);
+            setError("");
 
             const response = await api.get(
                 `/notes/${id}`
@@ -32,7 +37,9 @@ function NoteDetails() {
             if (error.response?.status === 401) {
 
                 localStorage.removeItem("token");
+
                 navigate("/login");
+
                 return;
             }
 
@@ -51,8 +58,15 @@ function NoteDetails() {
     if (loading) {
 
         return (
+
             <div className="note-loading">
-                Loading note...
+
+                <div className="note-spinner"></div>
+
+                <p>
+                    Loading note...
+                </p>
+
             </div>
         );
     }
@@ -61,8 +75,25 @@ function NoteDetails() {
     if (error) {
 
         return (
-            <div className="note-error">
-                {error}
+
+            <div className="note-error-page">
+
+                <h2>
+                    Something went wrong
+                </h2>
+
+                <p>
+                    {error}
+                </p>
+
+                <button
+                    onClick={() =>
+                        navigate("/notes")
+                    }
+                >
+                    ← Back to Notes
+                </button>
+
             </div>
         );
     }
@@ -71,25 +102,14 @@ function NoteDetails() {
     if (!note) {
 
         return (
-            <div className="note-error">
-                Note not found.
-            </div>
-        );
-    }
 
+            <div className="note-error-page">
 
-    return (
-
-        <div className="note-details-page">
-
-            {/* =========================
-                HEADER
-            ========================= */}
-
-            <div className="note-details-header">
+                <h2>
+                    Note not found
+                </h2>
 
                 <button
-                    className="note-back-button"
                     onClick={() =>
                         navigate("/notes")
                     }
@@ -97,144 +117,216 @@ function NoteDetails() {
                     ← Back to Notes
                 </button>
 
-
-                <div className="note-actions">
-
-                    <button
-                        className="note-action-button"
-                        onClick={() =>
-                            navigate(`/notes/${id}/edit`)
-                        }
-                    >
-                        ✏️ Edit
-                    </button>
-
-                </div>
-
             </div>
+        );
+    }
+
+
+    return (
+
+        <div className="note-details-layout">
+
+            {/* =========================
+                SIDEBAR
+            ========================= */}
+
+            <Sidebar />
 
 
             {/* =========================
-                NOTE CONTENT
+                MAIN CONTENT
             ========================= */}
 
-            <div className="note-details-card">
+            <main className="note-details-main">
 
-                <h1 className="note-details-title">
-                    {note.title}
-                </h1>
+                {/* =========================
+                    HEADER
+                ========================= */}
 
+                <header className="note-details-header">
 
-                {/* Category + Tags */}
-
-                <div className="note-details-meta">
-
-                    {note.categoryName && (
-
-                        <span className="note-meta-item">
-                            📁 {note.categoryName}
-                        </span>
-
-                    )}
+                    <button
+                        className="note-back-button"
+                        onClick={() =>
+                            navigate("/notes")
+                        }
+                    >
+                        ← Back to Notes
+                    </button>
 
 
-                    {note.tagNames?.length > 0 && (
+                    <button
+                        className="note-edit-button"
+                        onClick={() =>
+                            navigate(
+                                `/notes/${id}/edit`
+                            )
+                        }
+                    >
+                        ✏️ Edit Note
+                    </button>
 
-                        note.tagNames.map((tag) => (
+                </header>
+
+
+                {/* =========================
+                    NOTE CARD
+                ========================= */}
+
+                <article className="note-details-card">
+
+                    {/* TITLE */}
+
+                    <div className="note-title-section">
+
+                        <h1 className="note-details-title">
+                            {note.title}
+                        </h1>
+
+                    </div>
+
+
+                    {/* =========================
+                        META
+                    ========================= */}
+
+                    <div className="note-details-meta">
+
+                        {note.categoryName && (
+
+                            <span className="note-meta-item category">
+                                📁 {note.categoryName}
+                            </span>
+
+                        )}
+
+
+                        {note.tagNames?.map((tag) => (
 
                             <span
                                 key={tag}
-                                className="note-meta-item"
+                                className="note-meta-item tag"
                             >
                                 🏷️ {tag}
                             </span>
 
-                        ))
-
-                    )}
+                        ))}
 
 
-                    {note.favorite && (
+                        {note.favorite && (
 
-                        <span className="note-meta-item">
-                            ⭐ Favorite
-                        </span>
+                            <span className="note-meta-item favorite">
+                                ⭐ Favorite
+                            </span>
 
-                    )}
-
-                </div>
-
-
-                {/* Note Content */}
-
-                <div className="note-details-content">
-                    {note.content}
-                </div>
-
-
-                {/* Dates */}
-
-                <div className="note-dates">
-
-                    <div>
-
-                        <strong>
-                            Created
-                        </strong>
-
-                        <span>
-                            {new Date(
-                                note.createdAt
-                            ).toLocaleString()}
-                        </span>
+                        )}
 
                     </div>
 
 
-                    <div>
+                    {/* =========================
+                        CONTENT
+                    ========================= */}
 
-                        <strong>
-                            Last Updated
-                        </strong>
+                    <div className="note-content-section">
 
-                        <span>
-                            {new Date(
-                                note.updatedAt
-                            ).toLocaleString()}
-                        </span>
+                        <h3>
+                            Note Content
+                        </h3>
+
+                        <div className="note-details-content">
+
+                            {note.content}
+
+                        </div>
 
                     </div>
 
-                </div>
 
-            </div>
+                    {/* =========================
+                        DATES
+                    ========================= */}
+
+                    <div className="note-dates">
+
+                        <div className="note-date-item">
+
+                            <span>
+                                Created
+                            </span>
+
+                            <strong>
+                                {note.createdAt
+                                    ? new Date(
+                                        note.createdAt
+                                    ).toLocaleString()
+                                    : "—"}
+                            </strong>
+
+                        </div>
 
 
-            {/* =========================
-                AI ASSISTANT
-            ========================= */}
+                        <div className="note-date-item">
 
-            <div className="ai-section">
+                            <span>
+                                Last Updated
+                            </span>
 
-                <div className="ai-section-header">
+                            <strong>
+                                {note.updatedAt
+                                    ? new Date(
+                                        note.updatedAt
+                                    ).toLocaleString()
+                                    : "—"}
+                            </strong>
 
-                    <h2>
-                        🤖 PrepMate AI
-                    </h2>
+                        </div>
 
-                    <p>
-                        Study smarter with AI-powered
-                        tools for this note.
-                    </p>
+                    </div>
 
-                </div>
+                </article>
 
 
-                <AIAssistant
-                    noteId={id}
-                />
+                {/* =========================
+                    AI ASSISTANT
+                ========================= */}
 
-            </div>
+                <section className="ai-section">
+
+                    <div className="ai-section-header">
+
+                        <div className="ai-section-icon">
+                            🤖
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                PrepMate AI
+                            </h2>
+
+                            <p>
+                                Study smarter with
+                                AI-powered tools for
+                                this note.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div className="ai-assistant-container">
+
+                        <AIAssistant
+                            noteId={id}
+                        />
+
+                    </div>
+
+                </section>
+
+            </main>
 
         </div>
     );

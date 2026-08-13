@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import CreateNote from "./pages/CreateNote";
 import NoteDetails from "./pages/NoteDetails";
+import PublicRoute from "./components/PublicRoute";
 import Categories from "./pages/Categories";
 import EditNote from "./pages/EditNote";
 import Notes from "./pages/Notes";
@@ -29,25 +30,29 @@ function App() {
                     PUBLIC ROUTES
                 ========================= */}
 
-                <Route
+               <Route
                     path="/"
                     element={
                         <Navigate
-                            to="/dashboard"
+                            to="/login"
                             replace
                         />
                     }
                 />
 
-                <Route
-                    path="/login"
-                    element={<Login />}
-                />
+                <Route element={<PublicRoute />}>
 
-                <Route
-                    path="/register"
-                    element={<Register />}
-                />
+                    <Route
+                        path="/login"
+                        element={<Login />}
+                    />
+
+                    <Route
+                        path="/register"
+                        element={<Register />}
+                    />
+
+                </Route>
 
 
                 {/* =========================

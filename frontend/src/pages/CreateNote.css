@@ -1,22 +1,28 @@
-.create-note-page {
+.create-note-layout {
     min-height: 100vh;
     background: #f5f7fb;
     color: #172033;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.create-note-main {
+    margin-left: 230px;
     padding: 35px;
+    max-width: 1200px;
     box-sizing: border-box;
 }
+
 
 /* =========================
    HEADER
 ========================= */
 
 .create-note-header {
-    max-width: 1000px;
-    margin: 0 auto 30px;
-
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    margin-bottom: 25px;
 }
 
 .create-note-header h1 {
@@ -26,132 +32,64 @@
 }
 
 .create-note-header p {
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     color: #64748b;
-}
-
-.create-back-button {
-    border: 1px solid #dbe3ef;
-    background: white;
-    color: #172554;
-
-    padding: 10px 15px;
-    border-radius: 9px;
-
-    cursor: pointer;
     font-size: 14px;
 }
 
-.create-back-button:hover {
-    background: #eef2ff;
-}
 
 /* =========================
-   CARD
+   FORM CARD
 ========================= */
 
 .create-note-card {
-    max-width: 1000px;
-    margin: 0 auto;
-
     background: white;
-
-    border-radius: 18px;
-
-    padding: 35px;
-
     border: 1px solid #e8edf5;
+    border-radius: 18px;
+    padding: 30px;
 
     box-shadow:
-        0 5px 20px rgba(15, 23, 42, 0.06);
+        0 4px 18px rgba(15, 23, 42, 0.05);
 }
+
 
 /* =========================
-   FORM HEADER
+   FORM GROUP
 ========================= */
-
-.form-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-
-    padding-bottom: 25px;
-
-    margin-bottom: 25px;
-
-    border-bottom: 1px solid #edf1f6;
-}
-
-.form-icon {
-    width: 48px;
-    height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 12px;
-
-    background: #eef2ff;
-
-    font-size: 24px;
-}
-
-.form-header h2 {
-    margin: 0;
-
-    font-size: 21px;
-
-    color: #172554;
-}
-
-.form-header p {
-    margin: 5px 0 0;
-
-    color: #64748b;
-
-    font-size: 14px;
-}
-
-/* =========================
-   FORM
-========================= */
-
-.create-note-form {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-}
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #334155;
     font-size: 14px;
     font-weight: 600;
-    color: #334155;
 }
 
-.form-group input[type="text"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
 
+/* =========================
+   INPUTS
+========================= */
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
     box-sizing: border-box;
 
     border: 1px solid #dbe3ef;
-
     border-radius: 10px;
 
     padding: 13px 14px;
 
+    font-family: inherit;
     font-size: 14px;
 
     color: #172033;
-
     background: white;
 
     outline: none;
@@ -159,59 +97,104 @@
     transition: 0.2s ease;
 }
 
-.form-group input[type="text"]:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
     border-color: #6366f1;
 
     box-shadow:
         0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
+.form-group input:disabled,
+.form-group textarea:disabled,
+.form-group select:disabled {
+    background: #f8fafc;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   TEXTAREA
+========================= */
+
 .form-group textarea {
+    min-height: 300px;
     resize: vertical;
-
-    min-height: 250px;
-
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
-.field-hint {
+
+/* =========================
+   LABEL ROW
+========================= */
+
+.content-label-row {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-label-row span {
     color: #94a3b8;
-
     font-size: 12px;
-
-    line-height: 1.5;
+    font-weight: 400;
 }
+
+
+/* =========================
+   OPTIONS
+========================= */
+
+.options-loading {
+    padding: 13px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.no-tags {
+    padding: 15px;
+
+    background: #f8fafc;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
 
 /* =========================
    TAGS
 ========================= */
 
-.tags-container {
+.tag-selection {
     display: flex;
-
     flex-wrap: wrap;
-
-    gap: 10px;
+    gap: 9px;
 }
 
 .tag-option {
-    display: inline-flex;
+    border: 1px solid #dbe3ef;
 
-    align-items: center;
+    background: #f8fafc;
 
-    gap: 7px;
+    color: #475569;
 
     padding: 8px 12px;
 
-    border-radius: 9px;
-
-    background: #f1f5f9;
-
-    border: 1px solid #e2e8f0;
-
-    color: #475569;
+    border-radius: 20px;
 
     cursor: pointer;
 
@@ -221,148 +204,105 @@
 }
 
 .tag-option:hover {
-    border-color: #a5b4fc;
-
     background: #eef2ff;
+    border-color: #a5b4fc;
 }
 
 .tag-option.selected {
-    background: #eef2ff;
-
-    border-color: #6366f1;
-
-    color: #3730a3;
+    background: #172554;
+    border-color: #172554;
+    color: white;
 }
 
-.tag-option input {
-    accent-color: #4f46e5;
+.tag-option:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-.no-tags {
-    padding: 12px;
-
-    border-radius: 9px;
-
-    background: #f8fafc;
-
-    color: #94a3b8;
-
-    font-size: 13px;
-}
 
 /* =========================
    ERROR
 ========================= */
 
 .create-note-error {
-    background: #fef2f2;
-
-    border: 1px solid #fecaca;
-
-    color: #b91c1c;
+    margin-bottom: 20px;
 
     padding: 12px 15px;
 
-    border-radius: 9px;
+    background: #fef2f2;
 
-    font-size: 14px;
+    color: #b91c1c;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    font-size: 13px;
 }
+
 
 /* =========================
    ACTIONS
 ========================= */
 
-.form-actions {
+.create-note-actions {
     display: flex;
-
     justify-content: flex-end;
+    gap: 12px;
 
-    gap: 10px;
+    padding-top: 20px;
 
-    padding-top: 10px;
+    border-top: 1px solid #edf1f6;
 }
 
-.cancel-button,
-.submit-note-button {
+.create-note-actions button {
     padding: 12px 20px;
 
-    border-radius: 9px;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 600;
 
     cursor: pointer;
 
-    font-size: 14px;
-
-    font-weight: 600;
+    transition: 0.2s ease;
 }
 
-.cancel-button {
-    background: white;
 
+/* CANCEL */
+
+.cancel-note-button {
     border: 1px solid #dbe3ef;
+
+    background: white;
 
     color: #475569;
 }
 
-.cancel-button:hover:not(:disabled) {
+.cancel-note-button:hover:not(:disabled) {
     background: #f8fafc;
 }
 
-.submit-note-button {
-    background: #172554;
 
+/* SAVE */
+
+.save-note-button {
     border: none;
+
+    background: #172554;
 
     color: white;
 }
 
-.submit-note-button:hover:not(:disabled) {
+.save-note-button:hover:not(:disabled) {
     background: #1e3a8a;
 }
 
-.cancel-button:disabled,
-.submit-note-button:disabled {
-    opacity: 0.6;
-
+.create-note-actions button:disabled {
+    opacity: 0.55;
     cursor: not-allowed;
 }
 
-/* =========================
-   LOADING
-========================= */
-
-.options-loading {
-    min-height: 300px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    color: #64748b;
-}
-
-.create-spinner {
-    width: 35px;
-    height: 35px;
-
-    border: 4px solid #e2e8f0;
-
-    border-top-color: #172554;
-
-    border-radius: 50%;
-
-    animation:
-        create-spin 0.8s linear infinite;
-}
-
-@keyframes create-spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 /* =========================
    MOBILE
@@ -370,34 +310,24 @@
 
 @media (max-width: 700px) {
 
-    .create-note-page {
+    .create-note-main {
+        margin-left: 0;
         padding: 20px;
     }
 
-    .create-note-header {
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-
-    .create-back-button {
-        width: 100%;
+    .create-note-header h1 {
+        font-size: 25px;
     }
 
     .create-note-card {
-        padding: 22px;
+        padding: 20px;
     }
 
-    .form-header {
-        align-items: flex-start;
-    }
-
-    .form-actions {
+    .create-note-actions {
         flex-direction: column-reverse;
     }
 
-    .cancel-button,
-    .submit-note-button {
+    .create-note-actions button {
         width: 100%;
     }
 }

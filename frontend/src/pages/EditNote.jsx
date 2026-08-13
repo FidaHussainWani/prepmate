@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 import api from "../services/api";
 import "./EditNote.css";
 
@@ -24,9 +25,13 @@ function EditNote() {
         loadData();
     }, [id]);
 
+
     const loadData = async () => {
 
         try {
+
+            setLoading(true);
+            setError("");
 
             const [
                 noteResponse,
@@ -40,8 +45,8 @@ function EditNote() {
 
             const note = noteResponse.data;
 
-            setTitle(note.title);
-            setContent(note.content);
+            setTitle(note.title || "");
+            setContent(note.content || "");
 
             setCategoryId(
                 note.categoryId
@@ -49,7 +54,9 @@ function EditNote() {
                     : ""
             );
 
-            setTagIds(note.tagIds || []);
+            setTagIds(
+                note.tagIds || []
+            );
 
             setCategories(
                 categoriesResponse.data
@@ -91,10 +98,12 @@ function EditNote() {
                 return currentTags.filter(
                     (id) => id !== tagId
                 );
-
             }
 
-            return [...currentTags, tagId];
+            return [
+                ...currentTags,
+                tagId
+            ];
         });
     };
 
@@ -103,24 +112,56 @@ function EditNote() {
 
         e.preventDefault();
 
+        if (!title.trim()) {
+
+            setError(
+                "Please enter a note title."
+            );
+
+            return;
+        }
+
+        if (!content.trim()) {
+
+            setError(
+                "Please enter note content."
+            );
+
+            return;
+        }
+
         setSaving(true);
         setError("");
 
         try {
 
             await api.put(`/notes/${id}`, {
-                title,
-                content,
+
+                title: title.trim(),
+
+                content: content.trim(),
+
                 categoryId:
                     categoryId === ""
                         ? null
                         : Number(categoryId),
+
                 tagIds
+
             });
 
             navigate(`/notes/${id}`);
 
         } catch (error) {
+
+            if (error.response?.status === 401) {
+
+                localStorage.removeItem("token");
+
+                navigate("/login");
+
+                return;
+            }
 
             setError(
                 error.response?.data?.message ||
@@ -137,6 +178,7 @@ function EditNote() {
     if (loading) {
 
         return (
+
             <div className="edit-note-loading">
 
                 <div className="edit-spinner"></div>
@@ -152,86 +194,101 @@ function EditNote() {
 
     return (
 
-        <div className="edit-note-page">
+        <div className="edit-note-layout">
 
             {/* =========================
-                HEADER
+                SIDEBAR
             ========================= */}
 
-            <div className="edit-note-header">
-
-                <button
-                    className="edit-back-button"
-                    onClick={() =>
-                        navigate(`/notes/${id}`)
-                    }
-                >
-                    ← Back to Note
-                </button>
-
-                <div>
-
-                    <h1>
-                        Edit Note
-                    </h1>
-
-                    <p>
-                        Update and organize your study note
-                    </p>
-
-                </div>
-
-            </div>
+            <Sidebar />
 
 
             {/* =========================
-                FORM CARD
+                MAIN
             ========================= */}
 
-            <div className="edit-note-card">
+            <main className="edit-note-main">
 
-                <div className="edit-form-header">
+                {/* =========================
+                    HEADER
+                ========================= */}
 
-                    <div className="edit-form-icon">
-                        ✏️
-                    </div>
+                <header className="edit-note-header">
 
                     <div>
 
-                        <h2>
-                            Edit Study Note
-                        </h2>
+                        <h1>
+                            Edit Note
+                        </h1>
 
                         <p>
-                            Make your changes and save them
-                            when you're finished.
+                            Update and organize your
+                            study note.
                         </p>
 
                     </div>
 
-                </div>
+
+                    <button
+                        className="edit-back-button"
+                        onClick={() =>
+                            navigate(`/notes/${id}`)
+                        }
+                    >
+                        ← Back to Note
+                    </button>
+
+                </header>
 
 
-                {error && (
-
-                    <div className="edit-note-error">
-                        ⚠️ {error}
-                    </div>
-
-                )}
-
+                {/* =========================
+                    FORM CARD
+                ========================= */}
 
                 <form
+                    className="edit-note-card"
                     onSubmit={handleUpdate}
-                    className="edit-note-form"
                 >
+
+                    <div className="edit-card-title">
+
+                        <div className="edit-card-icon">
+                            ✏️
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Edit Study Note
+                            </h2>
+
+                            <p>
+                                Make your changes and
+                                save them when finished.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    {/* ERROR */}
+
+                    {error && (
+
+                        <div className="edit-note-error">
+                            ⚠️ {error}
+                        </div>
+
+                    )}
+
 
                     {/* TITLE */}
 
                     <div className="edit-form-group">
 
                         <label htmlFor="edit-title">
-                            Title
+                            Note Title
                         </label>
 
                         <input
@@ -244,6 +301,7 @@ function EditNote() {
                                 )
                             }
                             placeholder="Enter note title"
+                            disabled={saving}
                             required
                         />
 
@@ -254,9 +312,17 @@ function EditNote() {
 
                     <div className="edit-form-group">
 
-                        <label htmlFor="edit-content">
-                            Content
-                        </label>
+                        <div className="edit-label-row">
+
+                            <label htmlFor="edit-content">
+                                Note Content
+                            </label>
+
+                            <span>
+                                {content.length} characters
+                            </span>
+
+                        </div>
 
                         <textarea
                             id="edit-content"
@@ -266,16 +332,16 @@ function EditNote() {
                                     e.target.value
                                 )
                             }
-                            rows="15"
+                            rows="16"
                             placeholder="Write your study notes..."
+                            disabled={saving}
                             required
                         />
 
-                        <span className="edit-field-hint">
-                            Update the content of your note.
-                            Your AI tools will use the updated
-                            content.
-                        </span>
+                        <small>
+                            Your AI tools will use
+                            the updated content.
+                        </small>
 
                     </div>
 
@@ -296,6 +362,7 @@ function EditNote() {
                                     e.target.value
                                 )
                             }
+                            disabled={saving}
                         >
 
                             <option value="">
@@ -324,56 +391,66 @@ function EditNote() {
 
                     <div className="edit-form-group">
 
-                        <label>
-                            Tags
-                        </label>
+                        <div className="edit-label-row">
+
+                            <label>
+                                Tags
+                            </label>
+
+                            <span>
+                                {tagIds.length} selected
+                            </span>
+
+                        </div>
+
 
                         {tags.length === 0 ? (
 
                             <div className="edit-no-tags">
-                                No tags available.
+                                No tags available. Create
+                                tags from the Tags page.
                             </div>
 
                         ) : (
 
                             <div className="edit-tags-container">
 
-                                {tags.map(
-                                    (tag) => (
+                                {tags.map((tag) => {
 
-                                        <label
+                                    const selected =
+                                        tagIds.includes(
+                                            tag.id
+                                        );
+
+                                    return (
+
+                                        <button
+                                            type="button"
                                             key={tag.id}
-                                            className={
-                                                tagIds.includes(
+                                            className={`edit-tag-option ${
+                                                selected
+                                                    ? "selected"
+                                                    : ""
+                                            }`}
+                                            onClick={() =>
+                                                handleTagChange(
                                                     tag.id
                                                 )
-                                                    ? "edit-tag-option selected"
-                                                    : "edit-tag-option"
                                             }
+                                            disabled={saving}
                                         >
 
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    tagIds.includes(
-                                                        tag.id
-                                                    )
-                                                }
-                                                onChange={() =>
-                                                    handleTagChange(
-                                                        tag.id
-                                                    )
-                                                }
-                                            />
+                                            {selected
+                                                ? "✓ "
+                                                : ""}
 
-                                            <span>
-                                                #{tag.name}
-                                            </span>
+                                            #{tag.name}
 
-                                        </label>
+                                        </button>
 
-                                    )
-                                )}
+                                    );
+
+                                })}
 
                             </div>
 
@@ -400,19 +477,21 @@ function EditNote() {
 
                         <button
                             type="submit"
-                            className="save-note-button"
+                            className="edit-save-button"
                             disabled={saving}
                         >
+
                             {saving
                                 ? "Saving..."
                                 : "Save Changes"}
+
                         </button>
 
                     </div>
 
                 </form>
 
-            </div>
+            </main>
 
         </div>
     );

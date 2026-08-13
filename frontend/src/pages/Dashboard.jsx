@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 import api from "../services/api";
 import "./Dashboard.css";
 
@@ -41,9 +42,17 @@ function Dashboard() {
                 api.get("/dashboard/activity")
             ]);
 
-            setDashboard(dashboardResponse.data);
-            setStatistics(statisticsResponse.data);
-            setActivities(activityResponse.data);
+            setDashboard(
+                dashboardResponse.data
+            );
+
+            setStatistics(
+                statisticsResponse.data
+            );
+
+            setActivities(
+                activityResponse.data
+            );
 
         } catch (error) {
 
@@ -52,6 +61,7 @@ function Dashboard() {
             if (error.response?.status === 401) {
 
                 localStorage.removeItem("token");
+
                 navigate("/login");
 
                 return;
@@ -69,16 +79,11 @@ function Dashboard() {
     };
 
 
-    const logout = () => {
-
-        localStorage.removeItem("token");
-
-        navigate("/login");
-    };
-
     const refreshDashboard = () => {
+
         setLoading(true);
         setError("");
+
         loadDashboard();
     };
 
@@ -131,8 +136,13 @@ function Dashboard() {
 
         return (
             <div className="dashboard-loading">
+
                 <div className="loading-spinner"></div>
-                <p>Loading your dashboard...</p>
+
+                <p>
+                    Loading your dashboard...
+                </p>
+
             </div>
         );
     }
@@ -143,9 +153,13 @@ function Dashboard() {
         return (
             <div className="dashboard-error">
 
-                <h2>Something went wrong</h2>
+                <h2>
+                    Something went wrong
+                </h2>
 
-                <p>{error}</p>
+                <p>
+                    {error}
+                </p>
 
                 <button
                     onClick={loadDashboard}
@@ -157,7 +171,9 @@ function Dashboard() {
             </div>
         );
     }
-return (
+
+
+    return (
 
         <div className="dashboard-page">
 
@@ -165,46 +181,7 @@ return (
                 SIDEBAR
             ========================= */}
 
-            <aside className="dashboard-sidebar">
-
-                <div className="dashboard-logo">
-                    📚 PrepMate
-                </div>
-
-
-                <nav className="dashboard-nav">
-
-                    <button className="active">
-                        🏠 Dashboard
-                    </button>
-
-                    <button
-                        onClick={() => navigate("/notes")}
-                    >
-                        📝 My Notes
-                    </button>
-
-                    <button
-                        onClick={() => navigate("/notes/create")}
-                    >
-                        ➕ Create Note
-                    </button>
-
-                </nav>
-
-
-                <div className="sidebar-bottom">
-
-                    <button
-                        onClick={logout}
-                        className="sidebar-logout"
-                    >
-                        🚪 Logout
-                    </button>
-
-                </div>
-
-            </aside>
+            <Sidebar />
 
 
             {/* =========================
@@ -213,7 +190,9 @@ return (
 
             <main className="dashboard-main">
 
-                {/* HEADER */}
+                {/* =========================
+                    HEADER
+                ========================= */}
 
                 <header className="dashboard-header">
 
@@ -230,6 +209,7 @@ return (
 
                     </div>
 
+
                     <div className="dashboard-header-actions">
 
                         <button
@@ -238,13 +218,6 @@ return (
                             disabled={loading}
                         >
                             ↻ Refresh
-                        </button>
-
-                        <button
-                            onClick={logout}
-                            className="logout-button"
-                        >
-                            Logout
                         </button>
 
                     </div>
@@ -264,7 +237,9 @@ return (
                             📝
                         </div>
 
-                        <h3>Total Notes</h3>
+                        <h3>
+                            Total Notes
+                        </h3>
 
                         <p className="dashboard-card-value">
                             {dashboard?.totalNotes ?? 0}
@@ -279,7 +254,9 @@ return (
                             ⭐
                         </div>
 
-                        <h3>Favorite Notes</h3>
+                        <h3>
+                            Favorite Notes
+                        </h3>
 
                         <p className="dashboard-card-value">
                             {dashboard?.favoriteNotes ?? 0}
@@ -294,7 +271,9 @@ return (
                             📋
                         </div>
 
-                        <h3>AI Summaries</h3>
+                        <h3>
+                            AI Summaries
+                        </h3>
 
                         <p className="dashboard-card-value">
                             {dashboard?.summaries ?? 0}
@@ -309,7 +288,9 @@ return (
                             💬
                         </div>
 
-                        <h3>AI Questions</h3>
+                        <h3>
+                            AI Questions
+                        </h3>
 
                         <p className="dashboard-card-value">
                             {dashboard?.questions ?? 0}
@@ -324,7 +305,9 @@ return (
                             🧠
                         </div>
 
-                        <h3>AI Quizzes</h3>
+                        <h3>
+                            AI Quizzes
+                        </h3>
 
                         <p className="dashboard-card-value">
                             {dashboard?.quizzes ?? 0}
@@ -339,7 +322,9 @@ return (
                             🗂️
                         </div>
 
-                        <h3>Flashcards</h3>
+                        <h3>
+                            Flashcards
+                        </h3>
 
                         <p className="dashboard-card-value">
                             {dashboard?.flashcards ?? 0}
@@ -357,7 +342,9 @@ return (
                 <section className="dashboard-content">
 
 
-                    {/* RECENT ACTIVITY */}
+                    {/* =========================
+                        RECENT ACTIVITY
+                    ========================= */}
 
                     <div className="dashboard-panel">
 
@@ -373,68 +360,76 @@ return (
                             </p>
 
                         ) : (
-<ul className="activity-list">
 
-                                {activities.map((activity) => (
+                            <ul className="activity-list">
 
-                                    <li
-                                        key={activity.id}
-                                        className={`activity-item ${
-                                            activity.noteId
-                                                ? "activity-clickable"
-                                                : ""
-                                        }`}
-                                        onClick={() => {
-                                            if (activity.noteId) {
-                                                navigate(
-                                                    `/notes/${activity.noteId}`
-                                                );
-                                            }
-                                        }}
-                                    >
+                                {activities.map(
+                                    (activity) => (
 
-                                        <div className="activity-icon">
+                                        <li
+                                            key={activity.id}
+                                            className={`activity-item ${
+                                                activity.noteId
+                                                    ? "activity-clickable"
+                                                    : ""
+                                            }`}
+                                            onClick={() => {
 
-                                            {getActivityIcon(
-                                                activity.type
-                                            )}
+                                                if (
+                                                    activity.noteId
+                                                ) {
 
-                                        </div>
+                                                    navigate(
+                                                        `/notes/${activity.noteId}`
+                                                    );
+                                                }
 
+                                            }}
+                                        >
 
-                                        <div className="activity-info">
+                                            <div className="activity-icon">
 
-                                            <div className="activity-type">
-
-                                                {getActivityName(
+                                                {getActivityIcon(
                                                     activity.type
                                                 )}
 
                                             </div>
 
 
-                                            <div className="activity-note">
+                                            <div className="activity-info">
 
-                                                {activity.noteId
-                                                    ? `Note #${activity.noteId}`
-                                                    : "General activity"}
+                                                <div className="activity-type">
+
+                                                    {getActivityName(
+                                                        activity.type
+                                                    )}
+
+                                                </div>
+
+
+                                                <div className="activity-note">
+
+                                                    {activity.noteId
+                                                        ? `Note #${activity.noteId}`
+                                                        : "General activity"}
+
+                                                </div>
 
                                             </div>
 
-                                        </div>
 
+                                            <div className="activity-time">
 
-                                        <div className="activity-time">
+                                                {new Date(
+                                                    activity.createdAt
+                                                ).toLocaleString()}
 
-                                            {new Date(
-                                                activity.createdAt
-                                            ).toLocaleString()}
+                                            </div>
 
-                                        </div>
+                                        </li>
 
-                                    </li>
-
-                                ))}
+                                    )
+                                )}
 
                             </ul>
 
@@ -443,12 +438,16 @@ return (
                     </div>
 
 
-                    {/* RIGHT COLUMN */}
+                    {/* =========================
+                        RIGHT COLUMN
+                    ========================= */}
 
                     <div>
 
 
-                        {/* NOTE STATISTICS */}
+                        {/* =========================
+                            NOTE STATISTICS
+                        ========================= */}
 
                         <div className="dashboard-panel">
 
@@ -511,7 +510,9 @@ return (
                         </div>
 
 
-                        {/* QUICK ACTIONS */}
+                        {/* =========================
+                            QUICK ACTIONS
+                        ========================= */}
 
                         <div className="dashboard-panel quick-actions-panel">
 
@@ -541,23 +542,25 @@ return (
                                     ➕ Create New Note
                                 </button>
 
-                                <button
-                                className="quick-action-button"
-                                onClick={() =>
-                                    navigate("/categories")
-                                }
-                            >
-                                📁 Manage Categories
-                            </button>
 
-                            <button
-                                className="quick-action-button"
-                                onClick={() =>
-                                    navigate("/tags")
-                                }
-                            >
-                                🏷️ Manage Tags
-                            </button>
+                                <button
+                                    className="quick-action-button"
+                                    onClick={() =>
+                                        navigate("/categories")
+                                    }
+                                >
+                                    📁 Manage Categories
+                                </button>
+
+
+                                <button
+                                    className="quick-action-button"
+                                    onClick={() =>
+                                        navigate("/tags")
+                                    }
+                                >
+                                    🏷️ Manage Tags
+                                </button>
 
                             </div>
 
