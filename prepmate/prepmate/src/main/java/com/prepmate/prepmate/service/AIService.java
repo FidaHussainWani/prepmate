@@ -79,62 +79,111 @@ public class AIService {
         return result;
     }
 
-    // =========================
-    // ASK QUESTION
-    // =========================
+        // =========================
+        // ASK QUESTION
+        // =========================
 
-    public String askQuestion(
-        Long noteId,
-        String question,
-        String email) {
+        public String askQuestion(
+                Long noteId,
+                String question,
+                String email) {
 
-    User user = userRepository
-            .findByEmail(email)
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
 
-    Note note = noteRepository
-            .findByIdAndUser(noteId, user)
-            .orElseThrow(() ->
-                    new RuntimeException("Note not found"));
+        Note note = noteRepository
+                .findByIdAndUser(noteId, user)
+                .orElseThrow(() ->
+                        new RuntimeException("Note not found"));
 
-    String prompt = """
-            You are PrepMate, an AI study assistant.
 
-            Answer the student's question using ONLY
-            the information provided in the note below.
+        String prompt = """
+                You are PrepMate, an intelligent AI study tutor.
 
-            If the answer cannot be found in the note,
-            clearly say that the information is not
-            available in the provided note.
+                Your job is to help the student understand the
+                study note and answer their question accurately.
 
-            Explain the answer in simple language.
+                IMPORTANT INSTRUCTIONS:
 
-            NOTE TITLE:
-            %s
+                1. Carefully read and understand the entire note
+                before answering.
 
-            NOTE CONTENT:
-            %s
+                2. Answer questions using the information in the
+                note as the primary source.
 
-            STUDENT QUESTION:
-            %s
-            """.formatted(
-            note.getTitle(),
-            note.getContent(),
-            question
-    );
+                3. You may explain, summarize, rephrase, compare,
+                connect related concepts, and make simple logical
+                inferences when they are clearly supported by
+                the note.
 
-    String result = geminiService.generate(prompt);
+                4. Do NOT simply look for an exact sentence in the
+                note. Understand the meaning of the content.
 
-aiActivityRepository.save(
-        AIActivity.builder()
-                .user(user)
-                .note(note)
-                .type(AIActivity.ActivityType.QUESTION)
-                .build()
-);
+                5. If the student asks "what", "why", "how",
+                "explain", "difference between", "example",
+                or a similar conceptual question, provide a
+                clear explanation based on the note.
 
-return result;
+                6. If the question is partially answered by the
+                note, answer the part that is supported and
+                clearly mention what is not covered.
+
+                7. Do NOT invent facts, statistics, definitions,
+                examples, or information that contradicts the
+                note.
+
+                8. If the question is completely unrelated to the
+                note and cannot reasonably be answered from it,
+                say:
+                "This question is not covered in this note."
+
+                9. Use simple language suitable for a student.
+
+                10. Give a direct answer first, followed by a short
+                        explanation when useful.
+
+                11. If the question asks for a comparison, use a
+                        simple structured comparison.
+
+                12. If the question asks for an example and the note
+                        contains enough information to derive one,
+                        provide the example and explain it.
+
+                NOTE TITLE:
+                %s
+
+                NOTE CONTENT:
+                %s
+
+                STUDENT QUESTION:
+                %s
+
+                Now answer the student's question.
+                """.formatted(
+                note.getTitle(),
+                note.getContent(),
+                question
+        );
+
+
+        String result =
+                geminiService.generate(prompt);
+
+
+        aiActivityRepository.save(
+                AIActivity.builder()
+                        .user(user)
+                        .note(note)
+                        .type(
+                                AIActivity.ActivityType.QUESTION
+                        )
+                        .build()
+        );
+
+
+        return result;
         }
 
 
